@@ -19,6 +19,7 @@ package org.onebusaway.forwarder;
 import java.util.Set;
 
 import org.onebusaway.forwarder.dao.CleverAvlDao;
+import org.onebusaway.forwarder.queue.SqsQueue;
 import org.onebusaway.forwarder.service.CleverAvlService;
 import org.onebusaway.forwarder.service.ConfigurationService;
 import org.onebusaway.forwarder.sql.DatabaseSource;
@@ -49,6 +50,7 @@ public class CleverToAvlModule extends AbstractModule{
 		bind(DatabaseSource.class);
 		bind(CleverAvlService.class);
 		bind(CleverAvlDao.class);
+		bind(SqsQueue.class);
 		bind(Forwarder.class);
 
 	}

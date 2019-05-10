@@ -70,12 +70,15 @@ public class Forwarder {
 		_cleverAvlService = service;
 	}
 
+	@Inject
+	public void setSQSQueue(SqsQueue queue) {
+		_sqsQueue = queue;
+	}
+
 
 	@PostConstruct
 	public void start() {
 		Properties configProps = _config.getConfigProperties();
-
-		_sqsQueue = new SqsQueue(configProps);
 
 		if(configProps.getRefreshInterval() != null){
 			_refreshInterval = configProps.getRefreshInterval();
@@ -107,8 +110,8 @@ public class Forwarder {
 			List<CleverAvlData> avlDataList = _cleverAvlService.getCleverAvl();
 			for(CleverAvlData avlData: avlDataList){
 				try {
-					_log.info(avlData.toString());
-					//_sqsQueue.send(avlData);
+					_log.trace(avlData.toString());
+					_sqsQueue.send(avlData);
 				} catch (Exception jpe){
 					_log.error("Unable to parse avl data " + avlData, jpe);
 				}

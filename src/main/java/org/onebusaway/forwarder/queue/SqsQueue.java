@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.onebusaway.forwarder.models.CleverAvlData;
+import org.onebusaway.forwarder.service.ConfigurationService;
 import org.onebusaway.forwarder.sql.connection.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,10 @@ import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.amazonaws.services.sqs.model.SendMessageBatchResult;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class SqsQueue {
 
     private static final Logger _log = LoggerFactory.getLogger(SqsQueue.class);
@@ -42,6 +46,8 @@ public class SqsQueue {
     private static final int SQS_REQUEST_TIMEOUT = 10 * 1000; // default is 0
     private static final String DNS_TTL = "60"; // seconds
 
+    private ConfigurationService _config;
+
     private Properties _configProperties;
 
     private ArrayBlockingQueue<CleverAvlData> _sendQueue = new ArrayBlockingQueue<CleverAvlData>(
@@ -49,12 +55,16 @@ public class SqsQueue {
 
     private int _sendThreads = DEFAULT_SEND_THREADS;
 
-    public SqsQueue(Properties properties) {
-        _configProperties = properties;
+    @Inject
+    public void setConfiguration(ConfigurationService config) {
+        _config = config;
     }
 
     @PostConstruct
     public void start(){
+
+        _configProperties = _config.getConfigProperties();
+
         // set DNS TTL
         _log.debug("existing DNS TTL setting {}",
                 java.security.Security.getProperty("networkaddress.cache.ttl"));
