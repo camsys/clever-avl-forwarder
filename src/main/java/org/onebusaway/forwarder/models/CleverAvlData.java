@@ -17,6 +17,9 @@
 package org.onebusaway.forwarder.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.onebusaway.forwarder.dao.CleverAvlDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 
@@ -33,10 +36,10 @@ public class CleverAvlData {
 	private int vehicleSpeed, delay, vehicleBearing, sequenceNumber;
 	private boolean fix;
 
-	public CleverAvlData(){
-	}
-	
-	public void setCorrectTransitDataProperties(String colName, Object data){
+  private static final Logger _log = LoggerFactory.getLogger(CleverAvlData.class);
+
+
+  public void setCorrectTransitDataProperties(String colName, Object data){
         if(colName.equals("time")){
           this.setVehicleTime((Timestamp)data);
         } else if (colName.equals("vehicle_id")) {
@@ -61,7 +64,7 @@ public class CleverAvlData {
         } else if(colName.equals("driver_id")){
             this.setDriverId(data.toString());
         } else {
-            System.out.println("Cannot map "+colName+" = "+data.toString()+" to any type!");
+            _log.trace("Cannot map "+colName+" = "+data.toString()+" to any type!");
         }
     }
 	
@@ -180,7 +183,7 @@ public class CleverAvlData {
     this.blockId = blockId;
   }
 
-  @JsonProperty("vehicleid")
+  @JsonProperty("driverId")
   public String getDriverId() {
     return driverId;
   }
@@ -189,7 +192,7 @@ public class CleverAvlData {
     this.driverId = driverId;
   }
 
-  @JsonProperty("vehicleid")
+  @JsonProperty("delay")
   public int getDelay() {
     return delay;
   }
@@ -198,7 +201,7 @@ public class CleverAvlData {
     this.delay = delay;
   }
 
-  @JsonProperty("vehicleid")
+  @JsonProperty("sequenceNumber")
   public int getSequenceNumber() {
     return sequenceNumber;
   }
@@ -207,7 +210,7 @@ public class CleverAvlData {
     this.sequenceNumber = sequenceNumber;
   }
 
-  @JsonProperty("vehicleid")
+  @JsonProperty("fix")
   public boolean isFix() {
     return fix;
   }
