@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 public class Forwarder {
 	private static final Logger _log = LoggerFactory.getLogger(Forwarder.class);
 
-	private ScheduledExecutorService _executor;
+	private ScheduledExecutorService _refreshExecutor;
 
 	private ConfigurationService _config;
 
@@ -85,15 +85,15 @@ public class Forwarder {
 		}
 
 		_log.info("starting Avl to SQS forwarder service");
-		_executor = Executors.newSingleThreadScheduledExecutor();
-		_executor.scheduleAtFixedRate(new RefreshAvlData(), 0,
+		_refreshExecutor = Executors.newSingleThreadScheduledExecutor();
+		_refreshExecutor.scheduleAtFixedRate(new RefreshAvlData(), 0,
 				_refreshInterval, TimeUnit.SECONDS);
 	}
 
 	@PreDestroy
 	public void stop() {
 		_log.info("stopping Avl to SQS forwarder service");
-		_executor.shutdownNow();
+		_refreshExecutor.shutdownNow();
 	}
 
 	private class RefreshAvlData implements Runnable {

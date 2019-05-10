@@ -43,7 +43,7 @@ public class CleverAvlDao {
     }
 
     public List<CleverAvlData> getCleverAvlData() throws Exception {
-        String query = getQueryString();
+        String query = getCleverAvlDataQuery();
 
         Connection conn = null;
         ResultSet rs = null;
@@ -74,7 +74,7 @@ public class CleverAvlDao {
         return Collections.emptyList();
     }
 
-    private String getQueryString() {
+    private String getCleverAvlDataQuery() {
         String query = "SELECT " +
                 "DISTINCT [vehicle_position_date_time] as time" +
                 ",[vehicle_id] as vehicle_id" +
