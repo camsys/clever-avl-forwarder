@@ -25,6 +25,7 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Parser;
 import org.onebusaway.cli.CommandLineInterfaceLibrary;
+import org.onebusaway.forwarder.service.ConfigurationService;
 import org.onebusaway.guice.jsr250.LifecycleService;
 
 import com.google.inject.Guice;
@@ -40,7 +41,7 @@ import com.google.inject.Module;
 
 public class CleverAvlForwarderMain {
 	
-	private static final String ARG_REFRESH_INTERVAL = "refreshInterval";
+	private static final String CONFIG_FILE = "configFile";
 
 	public static void main(String[] args) throws Exception {
 		CleverAvlForwarderMain m = new CleverAvlForwarderMain();
@@ -65,6 +66,11 @@ public class CleverAvlForwarderMain {
 
 	public void run(String[] args) throws Exception {
 
+		if (CommandLineInterfaceLibrary.wantsHelp(args)) {
+			printUsage();
+			System.exit(-1);
+		}
+
 		Options options = new Options();
 		buildOptions(options);
 		Parser parser = new GnuParser();
@@ -76,15 +82,21 @@ public class CleverAvlForwarderMain {
 		Injector injector = Guice.createInjector(modules);
 		injector.injectMembers(this);
 
+		if(cli.hasOption(CONFIG_FILE)){
+			String configFile = cli.getOptionValue(CONFIG_FILE);
+			ConfigurationService configService = injector.getInstance(ConfigurationService.class);
+			configService.setConfigFile(configFile);
+		}
+
 		_lifecycleService.start();
 	}
+
 
 	private void printUsage() {
 		CommandLineInterfaceLibrary.printUsage(getClass());
 	}
 
 	protected void buildOptions(Options options) {
-		options.addOption(ARG_REFRESH_INTERVAL, true, "realtime data refresh interval");
-
+		options.addOption(CONFIG_FILE, true, "configuration file location");
 	}
 }
