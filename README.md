@@ -9,7 +9,7 @@ Agent that forwards data from a Clever AVL database to and AWS SQS Endpoint. Con
 
 ### Running the Application
 You can build the application using maven: `mvn clean package`
-You can run the jar using the following command: 
+You can run the jar using the following command: `java -jar clever-avl-forwarder.jar`
 
 ### Configuration
 
