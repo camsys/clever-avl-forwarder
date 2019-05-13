@@ -43,7 +43,8 @@ public class CleverAvlData {
         if(colName.equals("time")){
           this.setVehicleTime((Timestamp)data);
         } else if (colName.equals("vehicle_id")) {
-          this.setVehicleId(data.toString());
+          String vehicleId = padId(data.toString().trim());
+          this.setVehicleId(vehicleId);
         } else if(colName.equals("latitude")){
           this.setVehicleLat((Double)data);
         } else if(colName.equals("longitude")){
@@ -54,7 +55,7 @@ public class CleverAvlData {
           this.setVehicleSpeed((Integer)data);
         } else if(colName.equals("fix")){
           String fix = (String)data;
-          if(fix.equalsIgnoreCase("T")){
+          if(fix != null && fix.equalsIgnoreCase("T")){
             this.setFix(Boolean.TRUE);
           } else {
             this.setFix(Boolean.FALSE);
@@ -66,6 +67,19 @@ public class CleverAvlData {
         } else {
             _log.trace("Cannot map "+colName+" = "+data.toString()+" to any type!");
         }
+    }
+
+    private String padId(String vehicleId){
+      int idLength = vehicleId.length();
+      
+      if(idLength == 3){
+        return "0" + vehicleId;
+      } else if(idLength == 2){
+        return "00" + vehicleId;
+      } else if(idLength == 1){
+        return "000" + vehicleId;
+      }
+      return vehicleId;
     }
 	
 	public String toString() {
