@@ -11,5 +11,8 @@
  --JvmOptions="-XX:+HeapDumpOnOutOfMemoryError"^
  --StartMode=jvm^
  --StartClass=org.onebusaway.forwarder.CleverAvlForwarderMain^
+ --StopMode=jvm^
+ --StopClass=org.onebusaway.forwarder.CleverAvlForwarderMain^
+ --StopMethod=stop^
  --StdOutput=C:\clever-avl-forwarder\logs\forwarder-stdout.log^
  --StdError=C:\clever-avl-forwarder\logs\forwarder-sterr.log

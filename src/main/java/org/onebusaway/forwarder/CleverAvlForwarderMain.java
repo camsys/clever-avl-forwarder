@@ -91,6 +91,9 @@ public class CleverAvlForwarderMain {
 		_lifecycleService.start();
 	}
 
+	public void stop(){
+		System.exit(1);
+	}
 
 	private void printUsage() {
 		CommandLineInterfaceLibrary.printUsage(getClass());
