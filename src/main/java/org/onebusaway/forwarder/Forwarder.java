@@ -46,6 +46,8 @@ public class Forwarder {
 
 	private ScheduledExecutorService _refreshExecutor;
 
+	private ScheduledExecutorService _delayExecutor;
+
 	private ConfigurationService _config;
 
 	private CleverAvlService _cleverAvlService;
@@ -55,6 +57,8 @@ public class Forwarder {
 	private Connection _conn = null;
 
 	private int _refreshInterval = 30;
+
+	private long _lastSuccessfulQuery;
 
 	public Forwarder(){
 
@@ -88,6 +92,10 @@ public class Forwarder {
 		_refreshExecutor = Executors.newSingleThreadScheduledExecutor();
 		_refreshExecutor.scheduleAtFixedRate(new RefreshAvlData(), 0,
 				_refreshInterval, TimeUnit.SECONDS);
+
+		_delayExecutor = Executors.newSingleThreadScheduledExecutor();
+		_delayExecutor.scheduleAtFixedRate(new DelayCheck(), _refreshInterval,
+				_refreshInterval/4, TimeUnit.SECONDS);
 	}
 
 	@PreDestroy
@@ -108,13 +116,29 @@ public class Forwarder {
 
 		public void processData() throws Exception {
 			List<CleverAvlData> avlDataList = _cleverAvlService.getCleverAvl();
+			_lastSuccessfulQuery = System.currentTimeMillis();
 			for(CleverAvlData avlData: avlDataList){
 				try {
-					_log.trace(avlData.toString());
+					_log.debug(avlData.toString());
 					_sqsQueue.send(avlData);
 				} catch (Exception jpe){
 					_log.error("Unable to parse avl data " + avlData, jpe);
 				}
+			}
+		}
+	}
+
+	private class DelayCheck implements Runnable {
+		public void run() {
+			long hangTime = (System.currentTimeMillis() - _lastSuccessfulQuery) / 1000;
+			if (hangTime> ((_refreshInterval * 2) - (_refreshInterval / 2))) {
+				// if we've reached here, the connection to the database has hung
+				// we assume a service-based configuration and simply exit
+				// TODO adjust network/driver timeouts instead!
+				_log.error("Connection hung with delay of " + hangTime + ".  Exiting!");
+				System.exit(1);
+			} else {
+				_log.info("hangTime:" + hangTime);
 			}
 		}
 	}
