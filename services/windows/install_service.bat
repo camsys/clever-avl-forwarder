@@ -1,8 +1,8 @@
-"C:\Program Files\Java\commons-daemon-1.1.0-bin-windows\amd64\prunsrv.exe" //IS//cleverforwarder^
+"C:\Program Files\Java\commons-daemon-1.0.14-bin-windows\amd64\prunsrv.exe" //IS//cleverforwarder^
  --DisplayName "Clever Avl Forwarder"^
  --Description "An agent that forwards Clever SQL data to an SQS Queue"^
  --Startup=auto^
- --Install="C:\Program Files\Java\commons-daemon-1.1.0-bin-windows\amd64\prunsrv.exe"^
+ --Install="C:\Program Files\Java\commons-daemon-1.0.14-bin-windows\amd64\prunsrv.exe"^
  --Jvm="C:\Program Files\Java\jre1.8.0_211\bin\server\jvm.dll" ^
  --Classpath "C:\clever-avl-forwarder\clever-avl-forwarder.jar"^
  --Environment="PATH=C:\Program Files\Java\jre1.8.0_211\bin"^
