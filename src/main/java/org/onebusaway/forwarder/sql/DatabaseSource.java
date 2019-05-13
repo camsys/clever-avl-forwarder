@@ -58,19 +58,6 @@ public class DatabaseSource {
         _log.info("Connection String: "+ connString);
 
         return connString;
-
-       /* try {
-
-            DriverManager.setLoginTimeout(loginTimeout); // 30 seconds
-            conn = DriverManager.getConnection(connString);
-            _log.info("Connection Established");
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            _log.error("Failed to connect to " + connProps.getDatabaseName() + " database: " + e.getMessage());
-        }
-
-        return conn;*/
     }
 
     public static DataSource setupDataSource(String connectURI) {
@@ -115,17 +102,6 @@ public class DatabaseSource {
 
         return dataSource;
     }
-
-    /*public static DataSource setupDataSource(Properties configProperties) throws SQLException {
-
-        int loginTimeout = getConfigValue(configProperties.getLoginTimeout(), 30);
-
-        BasicDataSource ds = new BasicDataSource();
-        ds.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        ds.setUrl(getConnectionURI(configProperties));
-        ds.setLoginTimeout(loginTimeout);
-         return ds;
-     }*/
 
     public Connection getConnection() throws SQLException {
         return _dataSource.getConnection();
