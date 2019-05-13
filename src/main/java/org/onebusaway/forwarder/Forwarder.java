@@ -102,6 +102,7 @@ public class Forwarder {
 	public void stop() {
 		_log.info("stopping Avl to SQS forwarder service");
 		_refreshExecutor.shutdownNow();
+		_delayExecutor.shutdownNow();
 	}
 
 	private class RefreshAvlData implements Runnable {
