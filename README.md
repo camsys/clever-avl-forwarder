@@ -9,11 +9,17 @@ Agent that forwards data from a Clever AVL database to and AWS SQS Endpoint. Con
 
 ### Running the Application
 You can build the application using maven: `mvn clean package`
-You can run the jar using the following command: `java -jar clever-avl-forwarder.jar`
+You can run the jar using the following command: 
+  `java -jar clever-avl-forwarder.jar`
 
 ### Configuration
 
-A configuraiton file is necessary to run the forwarder. Create a file named `config.properties` and place it in the same directory as the jar. The `config.properties` file supports the following configuration values.
+A configuraiton file is necessary to run the forwarder. Create a file named `config.properties` and place it in the same directory as the jar. 
+
+Alternatively you can run the jar with the following argument to specify the config file location:
+`java -jar clever-avl-forwarder.jar --configFile=C:\clever-avl-forwarder\config.properties`
+
+The `config.properties` file supports the following configuration values.
 
 Config | Description | Example | Required
 --- | --- | --- | ---
@@ -33,8 +39,8 @@ aws.sqs.debugFlag | Flag to show or hide SQS debug statements. Defaults to false
 You can optionally run the forwarder as a service.
 
 #### Running as a Windows Service
-- Build the forwarder jar and then place it in a directory of your choice (eg. `C:/clever-avl-forwarder`)
-- Download and install the latest version of the Commons Daemon: https://commons.apache.org/proper/commons-daemon/download_daemon.cgi in the directory of your choice (eg. `C:/Program Files/Java/commons-daemon-1.1.0-bin-windows`)
+- Build the forwarder jar and then place it in a directory of your choice (eg. `C:\clever-avl-forwarder`)
+- Download and install the latest version of the Commons Daemon: https://commons.apache.org/proper/commons-daemon/download_daemon.cgi in the directory of your choice (eg. `C:\Program Files\Java\commons-daemon-1.0.14-bin-windows`)
 - Save the `services/install.sh`script and update accordingly
 - Run the `install.sh` script to create the service and then start the service from the windows service manager
 
