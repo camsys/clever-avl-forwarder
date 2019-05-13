@@ -77,16 +77,16 @@ public class CleverAvlDao {
     private String getCleverAvlDataQuery() {
         String query = "SELECT " +
                 "DISTINCT [vehicle_position_date_time] as time" +
-                ",[vehicle_id] as vehicle_id" +
+                ",RTRIM([vehicle_id]) as vehicle_id" +
                 ",[loc_x] as longitude" +
                 ",[loc_y] as latitude" +
                 ",[heading] as heading" +
                 ",[current_speed] as speed" +
-                ",[fix] as fix" +
-                ",[block_id] as clever_block_id" +
-                ",[b1].[BlockID] as gtfs_block_id" +
+                ",RTRIM([fix]) as fix" +
+                ",RTRIM([block_id]) as clever_block_id" +
+                ",RTRIM([b1].[BlockID]) as gtfs_block_id" +
                 ",[b1].[VersionID] as block_calendar_version" +
-                ",[driver_id] as driver_id" +
+                ",RTRIM([driver_id]) as driver_id" +
                 ",[t].[DayMapID] as cc_calendarID" +
                 ",[d].[DayMapID] as day_map_id" +
                 ",[d].DayMap as encoded_calendar_string " +
