@@ -1,6 +1,19 @@
-### clever-avl-forwarder
+## Clever-Avl-Forwarder
 
 Agent that forwards data from a Clever AVL database to and AWS SQS Endpoint. Connection information is defined in a config.properties file. Configuration values listed below.
+
+### Prereqs to run the application
+- Java 8 JDK
+- SQL Server Database
+- AWS SQS
+
+### Running the Application
+You can build the application using maven: `mvn clean package`
+You can run the jar using the following command: 
+
+### Configuration
+
+A configuraiton file is necessary to run the forwarder. Create a file named `config.properties` and place it in the same directory as the jar. The `config.properties` file supports the following configuration values.
 
 Config | Description | Example | Required
 --- | --- | --- | ---
@@ -15,3 +28,15 @@ aws.secret | AWS IAM account secret key for SQS access | ABCDEFGHIJK123456 | tru
 aws.sqs.url | AWS SQS Url | https://sqs.us-east-1.amazonaws.com/123456789/sqs_endpoint | true
 aws.sqs.sendThreads | Number of threads to send data to SQS | 2 | true
 aws.sqs.debugFlag | Flag to show or hide SQS debug statements. Defaults to false. | true | false
+
+### Running as a service
+You can optionally run the forwarder as a service.
+
+#### Running as a Windows Service
+- Build the forwarder jar and then place it in a directory of your choice (eg. `C:/clever-avl-forwarder`)
+- Download and install the latest version of the Commons Daemon: https://commons.apache.org/proper/commons-daemon/download_daemon.cgi in the directory of your choice (eg. `C:/Program Files/Java/commons-daemon-1.1.0-bin-windows`)
+- Save the `services/install.sh`script and update accordingly
+- Run the `install.sh` script to create the service and then start the service from the windows service manager
+
+#### Running as a Linux Service
+- Coming Soon
