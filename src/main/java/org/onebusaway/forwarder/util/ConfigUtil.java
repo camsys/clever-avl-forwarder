@@ -13,9 +13,9 @@ public class ConfigUtil {
 
     public static String getConfigValue(String value, String defaultValue){
         if(StringUtils.isNotBlank(value)){
-            return defaultValue;
+            return value;
         }
-        return value;
+        return defaultValue;
     }
 
 }
