@@ -98,7 +98,7 @@ public class CleverAvlDao {
                 "(" +
                 "(b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_Version] where ActivationDTS <= GETDATE()) " +
                 "AND " +
-                "SUBSTRING(DayMap, (DATEPART(dw, GETDATE()+@@DATEFIRST +5)%7+2),1) = '1') " +
+                "SUBSTRING(DayMap, (DATEPART(dw, GETDATE()+@@DATEFIRST)%7),1) = '1') " +
                 "OR " +
                 "b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_CalendarEvents] where CalendarDTS = GETDATE())" +
                 ") " +
