@@ -100,7 +100,7 @@ public class CleverAvlDao {
                 "AND " +
                 "SUBSTRING(DayMap, (DATEPART(dw, GETDATE()+@@DATEFIRST-1)%7+1),1) = '1') " +
                 "OR " +
-                "b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_CalendarEvents] where CalendarDTS = GETDATE())" +
+                "b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_CalendarEvents] where convert(date, CalendarDTS) = convert(date, GETDATE()))" +
                 ") " +
                 "AND t.VersionID = b1.VersionID " +
                 "ORDER BY vehicle_position_date_time DESC";
