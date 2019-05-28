@@ -19,6 +19,9 @@ A configuraiton file is necessary to run the forwarder. Create a file named `con
 Alternatively you can run the jar with the following argument to specify the config file location:  
 `java -jar clever-avl-forwarder.jar --configFile=C:\clever-avl-forwarder\config.properties`
 
+Optionally you can also override the default clever avl query:
+`java -jar clever-avl-forwarder.jar --sqlQueryFile=C:\clever-avl-forwarder\query.sql`
+
 The `config.properties` file supports the following configuration values.
 
 Config | Description | Example | Required
