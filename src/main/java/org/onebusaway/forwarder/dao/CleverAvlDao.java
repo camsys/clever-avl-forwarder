@@ -35,6 +35,39 @@ public class CleverAvlDao {
 
     private int _queryTimeout =30;
 
+    private String cleverAvlQuery = null;
+
+    private static final String DEFAULT_CLEVER_AVL_QUERY =
+            "SELECT " +
+            "DISTINCT [vehicle_position_date_time] as time" +
+            ",RTRIM([vehicle_id]) as vehicle_id" +
+            ",[loc_x] as longitude" +
+            ",[loc_y] as latitude" +
+            ",[heading] as heading" +
+            ",[current_speed] as speed" +
+            ",RTRIM([fix]) as fix" +
+            ",RTRIM([block_id]) as clever_block_id" +
+            ",RTRIM([b1].[BlockID]) as gtfs_block_id" +
+            ",[b1].[VersionID] as block_calendar_version" +
+            ",RTRIM([driver_id]) as driver_id" +
+            ",[t].[DayMapID] as cc_calendarID" +
+            ",[d].[DayMapID] as day_map_id" +
+            ",[d].DayMap as encoded_calendar_string " +
+            "FROM [CleverCAD].[dbo].[v_CleverReports_RealTimeAVLDataView] as avl " +
+            "LEFT JOIN [CleverCAD].[dbo].[BT_Block] as b1 on (avl.block_id = b1.BTBlockID) " +
+            "LEFT JOIN [CleverCAD].[dbo].[BT_Trip] as t on (b1.BlockID = t.BlockID) " +
+            "LEFT JOIN [CleverCAD].[dbo].[BT_DayMap] as d on (t.DayMapID = d.DayMapID) " +
+            "WHERE " +
+            "(" +
+            "(b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_Version] where ActivationDTS <= GETDATE()) " +
+            "AND " +
+            "SUBSTRING(DayMap, (DATEPART(dw, GETDATE()+@@DATEFIRST-1)%7+1),1) = '1') " +
+            "OR " +
+            "b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_CalendarEvents] where convert(date, CalendarDTS) = convert(date, GETDATE()))" +
+            ") " +
+            "AND t.VersionID = b1.VersionID " +
+            "ORDER BY vehicle_position_date_time DESC";
+
 
     @PostConstruct
     public void start() {
@@ -43,7 +76,7 @@ public class CleverAvlDao {
     }
 
     public List<CleverAvlData> getCleverAvlData() throws Exception {
-        String query = getCleverAvlDataQuery();
+        String query = getQuery();
 
         Connection conn = null;
         ResultSet rs = null;
@@ -74,38 +107,19 @@ public class CleverAvlDao {
         return Collections.emptyList();
     }
 
-    private String getCleverAvlDataQuery() {
-        String query = "SELECT " +
-                "DISTINCT [vehicle_position_date_time] as time" +
-                ",RTRIM([vehicle_id]) as vehicle_id" +
-                ",[loc_x] as longitude" +
-                ",[loc_y] as latitude" +
-                ",[heading] as heading" +
-                ",[current_speed] as speed" +
-                ",RTRIM([fix]) as fix" +
-                ",RTRIM([block_id]) as clever_block_id" +
-                ",RTRIM([b1].[BlockID]) as gtfs_block_id" +
-                ",[b1].[VersionID] as block_calendar_version" +
-                ",RTRIM([driver_id]) as driver_id" +
-                ",[t].[DayMapID] as cc_calendarID" +
-                ",[d].[DayMapID] as day_map_id" +
-                ",[d].DayMap as encoded_calendar_string " +
-                "FROM [CleverCAD].[dbo].[v_CleverReports_RealTimeAVLDataView] as avl " +
-                "LEFT JOIN [CleverCAD].[dbo].[BT_Block] as b1 on (avl.block_id = b1.BTBlockID) " +
-                "LEFT JOIN [CleverCAD].[dbo].[BT_Trip] as t on (b1.BlockID = t.BlockID) " +
-                "LEFT JOIN [CleverCAD].[dbo].[BT_DayMap] as d on (t.DayMapID = d.DayMapID) " +
-                "WHERE " +
-                "(" +
-                "(b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_Version] where ActivationDTS <= GETDATE()) " +
-                "AND " +
-                "SUBSTRING(DayMap, (DATEPART(dw, GETDATE()+@@DATEFIRST-1)%7+1),1) = '1') " +
-                "OR " +
-                "b1.VersionID = (Select MAX(VersionID) from [CleverCAD].[dbo].[BT_CalendarEvents] where convert(date, CalendarDTS) = convert(date, GETDATE()))" +
-                ") " +
-                "AND t.VersionID = b1.VersionID " +
-                "ORDER BY vehicle_position_date_time DESC";
+    private String getQuery() {
+        if(cleverAvlQuery == null){
+            return DEFAULT_CLEVER_AVL_QUERY;
+        }
+        return cleverAvlQuery;
+    }
 
-        return query;
+    public String getCleverAvlQuery() {
+        return cleverAvlQuery;
+    }
+
+    public void setCleverAvlQuery(String cleverAvlQuery) {
+        this.cleverAvlQuery = cleverAvlQuery;
     }
 }
 

@@ -15,6 +15,8 @@
  */
 package org.onebusaway.forwarder;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,23 +27,28 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Parser;
 import org.onebusaway.cli.CommandLineInterfaceLibrary;
+import org.onebusaway.forwarder.dao.CleverAvlDao;
 import org.onebusaway.forwarder.service.ConfigurationService;
 import org.onebusaway.guice.jsr250.LifecycleService;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
- * @author bdferris
- * Modified by Khoa Tran 
+ * @author lcaraballo
  *
  */
 
 public class CleverAvlForwarderMain {
-	
+
+	private static final Logger _log = LoggerFactory.getLogger(CleverAvlForwarderMain.class);
+
 	private static final String CONFIG_FILE = "configFile";
+	private static final String SQL_QUERY_FILE = "sqlQueryFile";
 
 	public static void main(String[] args) throws Exception {
 		CleverAvlForwarderMain m = new CleverAvlForwarderMain();
@@ -88,6 +95,17 @@ public class CleverAvlForwarderMain {
 			configService.setConfigFile(configFile);
 		}
 
+		if(cli.hasOption(SQL_QUERY_FILE)){
+			String sqlQueryFile = cli.getOptionValue(SQL_QUERY_FILE);
+			try{
+				String sqlQuery = new String(Files.readAllBytes(Paths.get(sqlQueryFile)));
+				CleverAvlDao cleverAvlDao = injector.getInstance(CleverAvlDao.class);
+				cleverAvlDao.setCleverAvlQuery(sqlQuery);
+			} catch (Exception e){
+				_log.error("Unable to load SQL Query file", e);
+			}
+		}
+
 		_lifecycleService.start();
 	}
 
@@ -101,5 +119,6 @@ public class CleverAvlForwarderMain {
 
 	protected void buildOptions(Options options) {
 		options.addOption(CONFIG_FILE, true, "configuration file location");
+		options.addOption(SQL_QUERY_FILE, true, "custom sql query file location");
 	}
 }
