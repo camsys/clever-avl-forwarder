@@ -31,7 +31,7 @@ sql.portNumber | Database port | 1433 | false
 sql.databaseName | Database name | sampleDatabase | false
 sql.user | Database username | sa | true
 sql.password | Database password | password | true
-sql.refreshInterval | How often data is retreived from database. Defaults to 30. | false
+sql.refreshInterval | How often data is retreived from database. Defaults to 30. | 15 | false
 aws.key | AWS IAM account key for SQS access | ABC123 | true
 aws.secret | AWS IAM account secret key for SQS access | ABCDEFGHIJK123456 | true
 aws.sqs.url | AWS SQS Url | https://sqs.us-east-1.amazonaws.com/123456789/sqs_endpoint | true
