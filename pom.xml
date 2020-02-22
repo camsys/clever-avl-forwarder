@@ -13,8 +13,8 @@
   
   <repositories>
     <repository>
-      <id>public.onebusaway.org</id>
-      <url>http://nexus.onebusaway.org/content/groups/public/</url>
+      <id>repo.camsys-apps.com</id>
+      <url>https://repo.camsys-apps.com/third-party/</url>
     </repository>
     
     <repository>
@@ -30,7 +30,7 @@
       <url>file://${project.basedir}/libs</url>
     </repository>
   </repositories>
-  
+
   <dependencies>
     <dependency>
 	  <groupId>net.sf.opencsv</groupId>
